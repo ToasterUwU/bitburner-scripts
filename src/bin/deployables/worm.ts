@@ -11,8 +11,8 @@ export async function main(ns: NS): Promise<void> {
     while (true) {
         const maxMoney = ns.getServerMaxMoney(HOSTNAME)
         if (maxMoney > 0) {
-            if (((ns.getServerSecurityLevel(HOSTNAME) / ns.getServerMinSecurityLevel(HOSTNAME)) - 1) < 0.05) {
-                if (ns.getServerMoneyAvailable(HOSTNAME) / maxMoney >= 0.95) {
+            if (ns.getServerSecurityLevel(HOSTNAME) == ns.getServerMinSecurityLevel(HOSTNAME)) {
+                if (ns.getServerMoneyAvailable(HOSTNAME) == maxMoney) {
                     const stolenMoney = await ns.hack(HOSTNAME)
                     if (stolenMoney > 0) {
                         LOGGER.successToast("Stole", `$${stolenMoney}`, "from", HOSTNAME)
