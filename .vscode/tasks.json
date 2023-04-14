@@ -10,7 +10,10 @@
 			},
 			"problemMatcher": [],
 			"label": "npm: watch",
-			"detail": "npx tsc -w"
+			"detail": "npx tsc -w",
+			"runOptions": {
+				"runOn": "folderOpen"
+			}
 		}
 	]
 }
