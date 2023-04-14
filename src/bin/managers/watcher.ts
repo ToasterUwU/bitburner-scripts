@@ -1,5 +1,5 @@
 import { NS, ProcessInfo } from '@ns'
-import { TermLogger } from '/lib/Helpers'
+import { TermLogger } from '/lib/helpers'
 
 
 export async function main(ns: NS): Promise<void> {

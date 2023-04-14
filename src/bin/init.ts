@@ -1,5 +1,5 @@
 import { NS } from "@ns"
-import { TermLogger } from "/lib/Helpers"
+import { TermLogger } from "/lib/helpers"
 
 const MANAGER_PRIOS: Record<string, number> = { "watcher.js": 1, "hacknet.js": 0, "hacking.js": 2 }
 

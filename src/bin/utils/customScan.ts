@@ -1,5 +1,5 @@
 import { NS } from "@ns";
-import { Navigation, RecursiveDictionary } from "/lib/Helpers";
+import { Navigation, RecursiveDictionary } from "/lib/helpers";
 
 /** @param {NS} ns **/
 export async function main(ns: NS): Promise<void> {

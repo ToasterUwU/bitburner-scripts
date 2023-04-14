@@ -1,5 +1,5 @@
 import { NS } from "@ns";
-import { TermLogger } from "/lib/Helpers";
+import { TermLogger } from "/lib/helpers";
 
 /** @param {NS} ns **/
 export async function main(ns: NS): Promise<void> {
