@@ -28,43 +28,42 @@ async function rootIfPossible(ns: NS, host: string) {
     return true
 }
 
+function deployWorm(ns: NS, logger: TermLogger, host: string) {
+    ns.scp(["/bin/deployables/worm.js", "/lib/helpers.js"], host)
+
+    const threads = Math.floor((ns.getServerMaxRam(host) - ns.getServerUsedRam(host)) / ns.getScriptRam("/bin/deployables/worm.js", host))
+
+    if (threads > 0) {
+        if (ns.exec("/bin/deployables/worm.js", host, threads) > 0) {
+            logger.successToast("Started worm.js on", host)
+        }
+    }
+}
+
+async function recursiveRoot(ns: NS, logger: TermLogger, computerMap: RecursiveDictionary) {
+    for (const host in computerMap) {
+        if (!ns.hasRootAccess(host) && ns.getServerRequiredHackingLevel(host) <= ns.getPlayer().skills.hacking) {
+            if (await rootIfPossible(ns, host)) {
+                logger.successToast("Rooted", host)
+                deployWorm(ns, logger, host)
+            }
+        } else if (!ns.scriptRunning("/bin/deployables/worm.js", host)) {
+            deployWorm(ns, logger, host)
+        }
+
+        await recursiveRoot(ns, logger, computerMap[host])
+    }
+}
+
 /** @param {NS} ns **/
 export async function main(ns: NS): Promise<void> {
-    function deployWorm(host: string) {
-        ns.scp(["/bin/deployables/worm.js", "/lib/helpers.js"], host)
-
-        const threads = Math.floor((ns.getServerMaxRam(host) - ns.getServerUsedRam(host)) / ns.getScriptRam("/bin/deployables/worm.js", host))
-
-        if (threads > 0) {
-            if (ns.exec("/bin/deployables/worm.js", host, threads) > 0) {
-                LOGGER.successToast("Started worm.js on", host)
-            }
-        }
-    }
-
-    async function recursiveRoot(computerMap: RecursiveDictionary) {
-        for (const host in computerMap) {
-            if (!ns.hasRootAccess(host) && ns.getServerRequiredHackingLevel(host) <= ns.getPlayer().skills.hacking) {
-                if (await rootIfPossible(ns, host)) {
-                    LOGGER.successToast("Rooted", host)
-                    deployWorm(host)
-                }
-            } else if (!ns.scriptRunning("/bin/deployables/worm.js", host)) {
-                deployWorm(host)
-            }
-
-            await recursiveRoot(computerMap[host])
-        }
-    }
-
-
     const LOGGER = new TermLogger(ns)
     LOGGER.success("Started Hacking Manager")
 
     while (true) {
         const COMPUTER_MAP: RecursiveDictionary = Navigation.recursiveScan(ns, "home", true)
 
-        await recursiveRoot(COMPUTER_MAP)
+        await recursiveRoot(ns, LOGGER, COMPUTER_MAP)
 
         await ns.sleep(5000)
     }
