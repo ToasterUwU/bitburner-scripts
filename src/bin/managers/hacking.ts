@@ -57,7 +57,6 @@ export async function main(ns: NS): Promise<void> {
         }
     }
 
-    ns.enableLog("ALL")
 
     const LOGGER = new TermLogger(ns)
     LOGGER.success("Started Hacking Manager")

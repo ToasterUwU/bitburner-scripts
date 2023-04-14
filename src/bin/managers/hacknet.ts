@@ -3,7 +3,6 @@ import { TermLogger } from "/lib/helpers";
 
 /** @param {NS} ns **/
 export async function main(ns: NS): Promise<void> {
-    ns.enableLog("ALL")
 
     const BUY_AMOUNT = (ns.args.length > 0 && typeof ns.args[0] == "number") ? ns.args[0] : 1 // if there is at least one arg and the first arg is a number, use that number, else use 1
     const KEEP_MONEY_MULTIPLIER = (ns.args.length > 1 && typeof ns.args[1] == "number") ? ns.args[1] : 5
