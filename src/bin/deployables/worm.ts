@@ -13,7 +13,7 @@ export async function main(ns: NS): Promise<void> {
         if (maxMoney > 0) {
             if (ns.getServerSecurityLevel(HOSTNAME) == ns.getServerMinSecurityLevel(HOSTNAME)) {
                 let availableMoney = ns.getServerMoneyAvailable(HOSTNAME)
-                if (availableMoney == maxMoney || (availableMoney > 2500000 && ns.getServerGrowth(HOSTNAME) <= availableMoney / 100000)) {
+                if (availableMoney == maxMoney || (availableMoney > 1000000 && ns.getServerGrowth(HOSTNAME) <= availableMoney / 100000)) {
                     const stolenMoney = await ns.hack(HOSTNAME)
                     if (stolenMoney > 0) {
                         LOGGER.successToast("Stole", `$${stolenMoney}`, "from", HOSTNAME)
