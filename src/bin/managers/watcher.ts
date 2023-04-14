@@ -1,7 +1,14 @@
 import { NS, ProcessInfo } from '@ns'
+import { TermLogger } from '/lib/Helpers'
+
 
 export async function main(ns: NS): Promise<void> {
-    const hashes: Record<string,number> = {}
+    ns.enableLog("ALL")
+
+    const LOGGER = new TermLogger(ns)
+    LOGGER.success("Started Hacking Manager")
+
+    const hashes: Record<string, number> = {}
 
     const files = ns.ls('home', '.js')
     for (const file of files) {
@@ -17,14 +24,14 @@ export async function main(ns: NS): Promise<void> {
             const hash = getHash(contents)
 
             if (hash != hashes[file]) {
-                ns.tprintf(`INFO: Detected change in ${file}`)
+                LOGGER.info(`Detected change in ${file}`)
 
                 const processes = ns.ps().filter((p: ProcessInfo) => {
                     return p.filename == file
                 })
 
                 for (const process of processes) {
-                    ns.tprintf(`INFO: Restarting ${process.filename} ${process.args} -t ${process.threads}`)
+                    LOGGER.info(`Restarting ${process.filename} ${process.args} -t ${process.threads}`)
                     if (process.filename != ns.getScriptName()) {
                         ns.kill(process.pid)
                         ns.run(process.filename, process.threads, ...process.args)
@@ -37,7 +44,7 @@ export async function main(ns: NS): Promise<void> {
             }
         }
 
-        await ns.sleep(1000)
+        await ns.sleep(500)
     }
 }
 

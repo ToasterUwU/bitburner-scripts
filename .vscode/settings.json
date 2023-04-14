@@ -12,6 +12,10 @@
 
     // Bitburner Extension Settings
     "bitburner.scriptRoot": "./dist/",
+    "bitburner.authToken": "tZOHPnRnhI8f1kSuoQaAFlwiTKqEtu594ubUfASfDkJ+4boNw1MbBmxaYkmtXpQf",
+    "bitburner.fileWatcher.enable": true,
+    "bitburner.showFileWatcherEnabledNotification": true,
+    "bitburner.showPushSuccessNotification": true,
 
     // Autosave Settings
     "files.autoSave": "off",
@@ -19,7 +23,7 @@
     // Autosnippet settings
     "autoSnippet.snippets": [
         {
-            "pattern": "**/*.ts", 
+            "pattern": "**/*.ts",
             "snippet": "ns-template"
         },
     ],
