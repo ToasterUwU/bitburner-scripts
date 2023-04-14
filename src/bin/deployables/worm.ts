@@ -12,7 +12,8 @@ export async function main(ns: NS): Promise<void> {
         const maxMoney = ns.getServerMaxMoney(HOSTNAME)
         if (maxMoney > 0) {
             if (ns.getServerSecurityLevel(HOSTNAME) == ns.getServerMinSecurityLevel(HOSTNAME)) {
-                if (ns.getServerMoneyAvailable(HOSTNAME) == maxMoney) {
+                let availableMoney = ns.getServerMoneyAvailable(HOSTNAME)
+                if (availableMoney == maxMoney || (availableMoney > 2500000 && ns.getServerGrowth(HOSTNAME) <= availableMoney / 100000)) {
                     const stolenMoney = await ns.hack(HOSTNAME)
                     if (stolenMoney > 0) {
                         LOGGER.successToast("Stole", `$${stolenMoney}`, "from", HOSTNAME)
@@ -20,7 +21,7 @@ export async function main(ns: NS): Promise<void> {
                 } else {
                     await ns.grow(HOSTNAME)
 
-                    const availableMoney = ns.getServerMoneyAvailable(HOSTNAME)
+                    availableMoney = ns.getServerMoneyAvailable(HOSTNAME)
                     LOGGER.info("Grew Money on", HOSTNAME, `-> $${availableMoney.toLocaleString()}`, "available", "( Ratio:", (availableMoney / maxMoney).toFixed(2), ")")
                 }
             } else {
