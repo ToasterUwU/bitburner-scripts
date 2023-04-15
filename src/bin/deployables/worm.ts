@@ -16,7 +16,7 @@ export async function main(ns: NS): Promise<void> {
                 if (availableMoney == maxMoney || (availableMoney > 1000000 && ns.getServerGrowth(HOSTNAME) <= availableMoney / 100000)) {
                     const stolenMoney = await ns.hack(HOSTNAME)
                     if (stolenMoney > 0) {
-                        LOGGER.successToast("Stole", `$${stolenMoney}`, "from", HOSTNAME)
+                        LOGGER.successToast("Stole", `$${stolenMoney.toLocaleString()}`, "from", HOSTNAME)
                     }
                 } else {
                     await ns.grow(HOSTNAME)
