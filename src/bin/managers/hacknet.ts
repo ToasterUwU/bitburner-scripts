@@ -45,8 +45,10 @@ export async function main(ns: NS): Promise<void> {
                     }
                     break
                 } else {
-                    if (ns.hacknet.purchaseNode() >= 0) {
-                        LOGGER.successToast("Bought new Hacknet Node")
+                    if (ns.hacknet.getPurchaseNodeCost() * KEEP_MONEY_MULTIPLIER <= ns.getPlayer().money) {
+                        if (ns.hacknet.purchaseNode() >= 0) {
+                            LOGGER.successToast("Bought new Hacknet Node")
+                        }
                     }
                 }
             }
