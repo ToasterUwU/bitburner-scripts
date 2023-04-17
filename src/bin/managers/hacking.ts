@@ -61,6 +61,17 @@ export async function main(ns: NS): Promise<void> {
     LOGGER.success("Started Hacking Manager")
 
     while (true) {
+        // try {
+        //     ns.singularity.purchaseTor()
+        //     ns.singularity.purchaseProgram("BruteSSH.exe")
+        //     ns.singularity.purchaseProgram("FTPCrack.exe")
+        //     ns.singularity.purchaseProgram("relaySMTP.exe")
+        //     ns.singularity.purchaseProgram("HTTPworm.exe")
+        //     ns.singularity.purchaseProgram("SQLInject.exe")
+        // } catch (error) {
+        //     // couldnt buy Crackers, dont care.. maybe next time
+        // }
+
         const COMPUTER_MAP: RecursiveDictionary = Navigation.recursiveScan(ns, "home", true)
 
         await recursiveRoot(ns, LOGGER, COMPUTER_MAP)
