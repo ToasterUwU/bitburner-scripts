@@ -10,7 +10,7 @@ export async function main(ns: NS): Promise<void> {
 
     const LEVEL_BATCH_SIZE = 50
     const RAM_BATCH_SIZE = 16
-    const CORE_BATCH_SIZE = 4
+    const CORE_BATCH_SIZE = 3
 
     while (true) {
         if (ns.hacknet.numNodes() == 0) {
