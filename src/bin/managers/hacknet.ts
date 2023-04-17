@@ -19,6 +19,12 @@ export async function main(ns: NS): Promise<void> {
             }
         }
 
+        if (ns.hacknet.getPurchaseNodeCost() * KEEP_MONEY_MULTIPLIER <= ns.getPlayer().money) {
+            if (ns.hacknet.purchaseNode() >= 0) {
+                LOGGER.successToast("Bought new Hacknet Node")
+            }
+        }
+
         for (let i = 0; i < ns.hacknet.numNodes(); i++) {
             const stats = ns.hacknet.getNodeStats(i)
 
@@ -44,12 +50,6 @@ export async function main(ns: NS): Promise<void> {
                         }
                     }
                     break
-                }
-
-                if (ns.hacknet.getPurchaseNodeCost() * KEEP_MONEY_MULTIPLIER <= ns.getPlayer().money) {
-                    if (ns.hacknet.purchaseNode() >= 0) {
-                        LOGGER.successToast("Bought new Hacknet Node")
-                    }
                 }
             }
         }
