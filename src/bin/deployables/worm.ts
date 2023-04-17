@@ -3,35 +3,17 @@ import { TermLogger, Navigation, RecursiveDictionary } from '/lib/helpers'
 
 // Its a worm, it nibbbles. From that multi million transaction, to that guy who pays $10 for gas
 
-async function recursiveHack(ns: NS, logger: TermLogger, computerMap: RecursiveDictionary) {
-    for (const host in computerMap) {
-        if (ns.hasRootAccess(host) && ns.getServerRequiredHackingLevel(host) <= ns.getPlayer().skills.hacking) {
-            const maxMoney = ns.getServerMaxMoney(host)
+function flattenRecursiveDict(data: RecursiveDictionary) {
+    const flattenedData: Array<string> = []
 
-            if (maxMoney > 0) {
-                if (ns.getServerSecurityLevel(host) == ns.getServerMinSecurityLevel(host)) {
-                    let availableMoney = ns.getServerMoneyAvailable(host)
-                    if (availableMoney == maxMoney || (availableMoney > 1000000 && ns.getServerGrowth(host) <= availableMoney / 100000)) {
-                        const stolenMoney = await ns.hack(host)
-                        if (stolenMoney > 0) {
-                            logger.successToast("Stole", `$${stolenMoney.toLocaleString()}`, "from", host)
-                        }
-                    } else {
-                        await ns.grow(host)
-
-                        availableMoney = ns.getServerMoneyAvailable(host)
-                        logger.info("Grew Money on", host, `-> $${availableMoney.toLocaleString()}`, "available", "( Ratio:", (availableMoney / maxMoney).toFixed(2), ")")
-                    }
-                } else {
-                    await ns.weaken(host)
-
-                    logger.info("Weakend", host, "-> Security Ratio:", ((ns.getServerSecurityLevel(host) / ns.getServerMinSecurityLevel(host)) - 1).toFixed(2))
-                }
-            }
+    for (const host in data) {
+        flattenedData.push(host)
+        for (const x of flattenRecursiveDict(data[host])) {
+            flattenedData.push(x)
         }
-
-        await recursiveHack(ns, logger, computerMap[host])
     }
+
+    return flattenedData
 }
 
 export async function main(ns: NS): Promise<void> {
@@ -40,7 +22,39 @@ export async function main(ns: NS): Promise<void> {
     while (true) {
         const COMPUTER_MAP: RecursiveDictionary = Navigation.recursiveScan(ns, "home", true)
 
-        await recursiveHack(ns, LOGGER, COMPUTER_MAP)
+        const flattenedComputerMap = flattenRecursiveDict(COMPUTER_MAP)
+            .map(value => ({ value, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({ value }) => value) // shuffle the list
+
+        for (const i in flattenedComputerMap) {
+            const host = flattenedComputerMap[i]
+
+            if (ns.hasRootAccess(host) && ns.getServerRequiredHackingLevel(host) <= ns.getPlayer().skills.hacking) {
+                const maxMoney = ns.getServerMaxMoney(host)
+
+                if (maxMoney > 0) {
+                    if (ns.getServerSecurityLevel(host) == ns.getServerMinSecurityLevel(host)) {
+                        let availableMoney = ns.getServerMoneyAvailable(host)
+                        if (availableMoney == maxMoney || (availableMoney > 1000000 && ns.getServerGrowth(host) <= availableMoney / 100000)) {
+                            const stolenMoney = await ns.hack(host)
+                            if (stolenMoney > 0) {
+                                LOGGER.successToast("Stole", `$${stolenMoney.toLocaleString()}`, "from", host)
+                            }
+                        } else {
+                            await ns.grow(host)
+
+                            availableMoney = ns.getServerMoneyAvailable(host)
+                            LOGGER.info("Grew Money on", host, `-> $${availableMoney.toLocaleString()}`, "available", "( Ratio:", (availableMoney / maxMoney).toFixed(2), ")")
+                        }
+                    } else {
+                        await ns.weaken(host)
+
+                        LOGGER.info("Weakend", host, "-> Security Ratio:", ((ns.getServerSecurityLevel(host) / ns.getServerMinSecurityLevel(host)) - 1).toFixed(2))
+                    }
+                }
+            }
+        }
 
         await ns.sleep(1000)
     }
