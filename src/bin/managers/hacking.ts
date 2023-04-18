@@ -19,11 +19,11 @@ async function rootIfPossible(ns: NS, host: string) {
         return false
     }
 
-    try {
-        await ns.singularity.installBackdoor()
-    } catch (error) {
-        // ignore missing source file or missing RAM
-    }
+    // try {
+    //     await ns.singularity.installBackdoor()
+    // } catch (error) {
+    //     // ignore missing source file or missing RAM
+    // }
 
     return true
 }
