@@ -1,40 +1,33 @@
 import { NS } from '@ns'
+import { Navigation, RecursiveDictionary } from '/lib/helpers'
 
 
-function findPath(ns: NS, target: string, serverName: string, serverList: Array<string> = [], ignore: Array<string> = [], isFound = false): [Array<string>, boolean] {
-    ignore.push(serverName)
-
-    const scanResults = ns.scan(serverName)
-
-    for (const server of scanResults) {
-        if (ignore.includes(server)) {
-            continue
+function findPath(ns: NS, target: string, computerMap: RecursiveDictionary, hostList: Array<string> = [], isFound = false): [Array<string>, boolean] {
+    for (const host in computerMap) {
+        if (host === target) {
+            hostList.push(host)
+            return [hostList, true]
         }
 
-        if (server === target) {
-            serverList.push(server)
-            return [serverList, true]
-        }
+        hostList.push(host)
 
-        serverList.push(server)
-
-        const RESULT = findPath(ns, target, server, serverList, ignore, isFound)
-        serverList = RESULT[0]
+        const RESULT = findPath(ns, target, computerMap[host], hostList, isFound)
+        hostList = RESULT[0]
         isFound = RESULT[1]
 
         if (isFound) {
-            return [serverList, isFound]
+            return [hostList, isFound]
         }
 
-        serverList.pop()
+        hostList.pop()
     }
-    return [serverList, false]
+    return [hostList, false]
 }
 
 export async function main(ns: NS): Promise<void> {
     const TO_FIND = (ns.args.length > 0 && typeof ns.args[0] == "string") ? ns.args[0] : "n00dles" // if there is at least one arg and the first arg is a number, use that number, else use 1
 
-    const RESULT = findPath(ns, TO_FIND, "home")
+    const RESULT = findPath(ns, TO_FIND, Navigation.recursiveScan(ns, "home", true))
 
     ns.tprint("connect ", RESULT[0].join(";connect "))
 }
