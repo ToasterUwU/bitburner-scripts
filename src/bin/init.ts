@@ -23,7 +23,7 @@ export async function main(ns: NS): Promise<void> {
     for (const manager of ns.ls("home", "/bin/managers").sort(compareManagerPrios).reverse()) {
         if (ns.getScriptRam(manager) > ns.getServerMaxRam("home") - ns.getServerUsedRam("home")) { // If not enough free RAM currently
             while ((ns.getServerMaxRam("home") - ns.getServerUsedRam("home")) + ns.getScriptRam("/bin/init.js") < ns.getScriptRam(manager)) { // If not enough RAM even when killing this script
-                // ns.singularity.upgradeHomeRam()
+                ns.singularity.upgradeHomeRam()
                 await ns.sleep(500)
             }
 
