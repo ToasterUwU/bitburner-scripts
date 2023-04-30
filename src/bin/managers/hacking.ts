@@ -43,7 +43,7 @@ async function recursiveRoot(ns: NS, logger: TermLogger, computerMap: RecursiveD
                 logger.successToast("Rooted", host)
                 deployWorm(ns, logger, host)
             }
-        } else if (!ns.scriptRunning("/bin/deployables/worm.js", host)) {
+        } else if (ns.hasRootAccess(host) && !ns.scriptRunning("/bin/deployables/worm.js", host)) {
             deployWorm(ns, logger, host)
         }
 
