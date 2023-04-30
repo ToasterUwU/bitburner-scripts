@@ -21,24 +21,16 @@ export async function main(ns: NS): Promise<void> {
     const LOGGER = new TermLogger(ns)
 
     for (const manager of ns.ls("home", "/bin/managers").sort(compareManagerPrios).reverse()) {
-        if (ns.getScriptRam(manager) > ns.getServerMaxRam("home") - ns.getServerUsedRam("home")) { // If not enough free RAM currently
-            while ((ns.getServerMaxRam("home") - ns.getServerUsedRam("home")) + ns.getScriptRam("/bin/init.js") < ns.getScriptRam(manager)) { // If not enough RAM even when killing this script
-                ns.singularity.upgradeHomeRam()
-                await ns.sleep(500)
-            }
+        while (ns.getScriptRam(manager) > ns.getServerMaxRam("home") - ns.getServerUsedRam("home")) { // while not enough free RAM currently
+            ns.singularity.upgradeHomeRam()
+            await ns.sleep(500)
+        }
 
-            // If enough RAM when killing init.js
-            LOGGER.info("Starting", manager, "but need to kill current script first for freeing RAM")
-            await ns.sleep(1000)
-            ns.spawn(manager)
-
-        } else { // If enough RAM
-            const pid = ns.run(manager)
-            if (pid > 0) {
-                LOGGER.info(manager, "with PID", pid.toString())
-            } else {
-                LOGGER.err(manager, "couldnt be started")
-            }
+        const pid = ns.run(manager)
+        if (pid > 0) {
+            LOGGER.info(manager, "with PID", pid.toString())
+        } else {
+            LOGGER.err(manager, "couldnt be started")
         }
 
         await ns.sleep(3000)
