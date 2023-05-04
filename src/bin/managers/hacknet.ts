@@ -4,7 +4,7 @@ import { TermLogger } from "/lib/helpers";
 interface Deal {
     gainPerDollar: number
     upgradePrice: number
-    buyFunction: () => bool
+    buyFunction: () => boolean
     upgradeType: string
 }
 
@@ -54,7 +54,7 @@ export async function main(ns: NS): Promise<void> {
             const ramUpgradeCost = ns.hacknet.getRamUpgradeCost(i, BUY_AMOUNT)
             const ramUpgradeGain = productionDifference(STATS, 0, BUY_AMOUNT, 0) / ramUpgradeCost
             if (ramUpgradeGain > bestDeal.gainPerDollar) {
-                bestDeal = { gainPerDollar: levelUpramUpgradeGainradeGain, upgradePrice: ramUpgradeCost, buyFunction: () => { return ns.hacknet.upgradeRam(i, BUY_AMOUNT) }, upgradeType: "RAM" }
+                bestDeal = { gainPerDollar: levelUpgradeGain, upgradePrice: ramUpgradeCost, buyFunction: () => { return ns.hacknet.upgradeRam(i, BUY_AMOUNT) }, upgradeType: "RAM" }
             }
 
             const coreUpgradeCost = ns.hacknet.getCoreUpgradeCost(i, BUY_AMOUNT)

@@ -38,10 +38,11 @@ export async function main(ns: NS): Promise<void> {
             await ns.sleep(500)
         }
 
-        if (MANAGER_PRIOS[script] == Infinity) {
-            const pid = ns.run(script, Math.floor((ns.getServerMaxRam("home") - ns.getServerUsedRam("home")) / ns.getScriptRam(script)))
+        let pid: number
+        if (MANAGER_PRIOS[script] != Infinity) {
+            pid = ns.run(script)
         } else {
-            const pid = ns.run(script)
+            pid = ns.run(script, Math.floor((ns.getServerMaxRam("home") - ns.getServerUsedRam("home")) / ns.getScriptRam(script)))
         }
 
         if (pid > 0) {

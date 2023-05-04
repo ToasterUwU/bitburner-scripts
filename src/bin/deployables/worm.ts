@@ -25,7 +25,7 @@ export async function main(ns: NS): Promise<void> {
     while (true) {
         const currentRam = ns.getServerMaxRam(HOSTNAME)
         if (currentRam > MAX_RAM) {
-            ns.spawn("/bin/deployables/worm.js", Math.floor(ns.getServerMaxRam(HOSTNAME) / ns.getScriptRam(script)))
+            ns.spawn("/bin/deployables/worm.js", Math.floor(ns.getServerMaxRam(HOSTNAME) / ns.getScriptRam("/bin/deployables/worm.js")))
         }
 
         const COMPUTER_MAP: RecursiveDictionary = Navigation.recursiveScan(ns, "home", true)
