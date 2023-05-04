@@ -1,9 +1,9 @@
 import { NS } from "@ns"
 import { TermLogger } from "/lib/helpers"
 
-const MANAGER_PRIOS: Record<string, number> = { "hacknet.js": 0, "watcher.js": 1, "hacking.js": 2 }
+const MANAGER_PRIOS: Record<string, number> = { "/bin/managers/hacknet.js": 0, "/bin/managers/watcher.js": 1, "/bin/managers/hacking.js": 2, "/bin/deployables/worm.js": Infinity }
 
-function compareManagerPrios(manager1: string, manager2: string) {
+function compareScriptPrios(manager1: string, manager2: string) {
     const NAME1 = manager1.split("/")[-1]
     const NAME2 = manager2.split("/")[-1]
 
@@ -20,17 +20,34 @@ function compareManagerPrios(manager1: string, manager2: string) {
 export async function main(ns: NS): Promise<void> {
     const LOGGER = new TermLogger(ns)
 
-    for (const manager of ns.ls("home", "/bin/managers").sort(compareManagerPrios).reverse()) {
-        while (ns.getScriptRam(manager) > ns.getServerMaxRam("home") - ns.getServerUsedRam("home")) { // while not enough free RAM currently
+    for (const script of ns.ls("home", "/bin").sort(compareScriptPrios).reverse()) {
+        let found = false
+        for (const key in MANAGER_PRIOS) {
+            if (key == script) {
+                found = true
+                break
+            }
+        }
+
+        if (!found) {
+            continue
+        }
+
+        while (ns.getScriptRam(script) > ns.getServerMaxRam("home") - ns.getServerUsedRam("home")) { // while not enough free RAM currently
             // ns.singularity.upgradeHomeRam()
             await ns.sleep(500)
         }
 
-        const pid = ns.run(manager)
-        if (pid > 0) {
-            LOGGER.info(manager, "with PID", pid.toString())
+        if (MANAGER_PRIOS[script] == Infinity) {
+            const pid = ns.run(script, Math.floor((ns.getServerMaxRam("home") - ns.getServerUsedRam("home")) / ns.getScriptRam(script)))
         } else {
-            LOGGER.err(manager, "couldnt be started")
+            const pid = ns.run(script)
+        }
+
+        if (pid > 0) {
+            LOGGER.info(script, "with PID", pid.toString())
+        } else {
+            LOGGER.err(script, "couldnt be started")
         }
 
         await ns.sleep(3000)
