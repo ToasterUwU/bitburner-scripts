@@ -18,8 +18,16 @@ function flattenRecursiveDict(data: RecursiveDictionary) {
 
 export async function main(ns: NS): Promise<void> {
     const LOGGER = new TermLogger(ns)
+    const HOSTNAME = ns.getHostname()
+
+    const MAX_RAM = ns.getServerMaxRam(HOSTNAME)
 
     while (true) {
+        const currentRam = ns.getServerMaxRam(HOSTNAME)
+        if (currentRam > MAX_RAM) {
+            ns.spawn("/bin/deployables/worm.js", Math.floor(ns.getServerMaxRam(HOSTNAME) / ns.getScriptRam(script)))
+        }
+
         const COMPUTER_MAP: RecursiveDictionary = Navigation.recursiveScan(ns, "home", true)
 
         const flattenedComputerMap = flattenRecursiveDict(COMPUTER_MAP)
