@@ -19,7 +19,11 @@ async function rootIfPossible(ns: NS, host: string) {
         return false
     }
 
-    await ns.singularity.installBackdoor()
+    // try {
+    //     await ns.singularity.installBackdoor()
+    // } catch (error) {
+    //     // ignore missing source file or missing RAM
+    // }
 
     return true
 }
@@ -57,16 +61,16 @@ export async function main(ns: NS): Promise<void> {
     LOGGER.success("Started Hacking Manager")
 
     while (true) {
-        try {
-            ns.singularity.purchaseTor()
-            ns.singularity.purchaseProgram("BruteSSH.exe")
-            ns.singularity.purchaseProgram("FTPCrack.exe")
-            ns.singularity.purchaseProgram("relaySMTP.exe")
-            ns.singularity.purchaseProgram("HTTPworm.exe")
-            ns.singularity.purchaseProgram("SQLInject.exe")
-        } catch (error) {
-            // couldnt buy Crackers, dont care.. maybe next time
-        }
+        // try {
+        //     ns.singularity.purchaseTor()
+        //     ns.singularity.purchaseProgram("BruteSSH.exe")
+        //     ns.singularity.purchaseProgram("FTPCrack.exe")
+        //     ns.singularity.purchaseProgram("relaySMTP.exe")
+        //     ns.singularity.purchaseProgram("HTTPworm.exe")
+        //     ns.singularity.purchaseProgram("SQLInject.exe")
+        // } catch (error) {
+        //     // couldnt buy Crackers, dont care.. maybe next time
+        // }
 
         const COMPUTER_MAP: RecursiveDictionary = Navigation.recursiveScan(ns, "home", true)
 
