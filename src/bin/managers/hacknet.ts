@@ -2,6 +2,7 @@ import { NS, NodeStats } from "@ns";
 import { TermLogger } from "/lib/helpers";
 
 interface Deal {
+    nodeIndex: number
     gainPerDollar: number
     upgradePrice: number
     buyFunction: () => boolean
@@ -40,33 +41,32 @@ export async function main(ns: NS): Promise<void> {
             }
         }
 
+        let bestDeal: Deal = { nodeIndex: -1, gainPerDollar: 0, upgradePrice: Infinity, buyFunction: () => { return false }, upgradeType: "" }
         for (let i = 0; i < ns.hacknet.numNodes(); i++) {
             const STATS = ns.hacknet.getNodeStats(i)
-
-            let bestDeal: Deal = { gainPerDollar: 0, upgradePrice: Infinity, buyFunction: () => { return false }, upgradeType: "" }
 
             const levelUpgradeCost = ns.hacknet.getLevelUpgradeCost(i, BUY_AMOUNT)
             const levelUpgradeGain = productionDifference(STATS, BUY_AMOUNT, 0, 0) / levelUpgradeCost
             if (levelUpgradeGain > bestDeal.gainPerDollar) {
-                bestDeal = { gainPerDollar: levelUpgradeGain, upgradePrice: levelUpgradeCost, buyFunction: () => { return ns.hacknet.upgradeLevel(i, BUY_AMOUNT) }, upgradeType: "Level" }
+                bestDeal = { nodeIndex: i, gainPerDollar: levelUpgradeGain, upgradePrice: levelUpgradeCost, buyFunction: () => { return ns.hacknet.upgradeLevel(i, BUY_AMOUNT) }, upgradeType: "Level" }
             }
 
             const ramUpgradeCost = ns.hacknet.getRamUpgradeCost(i, BUY_AMOUNT)
             const ramUpgradeGain = productionDifference(STATS, 0, BUY_AMOUNT, 0) / ramUpgradeCost
             if (ramUpgradeGain > bestDeal.gainPerDollar) {
-                bestDeal = { gainPerDollar: levelUpgradeGain, upgradePrice: ramUpgradeCost, buyFunction: () => { return ns.hacknet.upgradeRam(i, BUY_AMOUNT) }, upgradeType: "RAM" }
+                bestDeal = { nodeIndex: i, gainPerDollar: levelUpgradeGain, upgradePrice: ramUpgradeCost, buyFunction: () => { return ns.hacknet.upgradeRam(i, BUY_AMOUNT) }, upgradeType: "RAM" }
             }
 
             const coreUpgradeCost = ns.hacknet.getCoreUpgradeCost(i, BUY_AMOUNT)
             const coreUpgradeGain = productionDifference(STATS, 0, 0, BUY_AMOUNT) / coreUpgradeCost
             if (coreUpgradeGain > bestDeal.gainPerDollar) {
-                bestDeal = { gainPerDollar: coreUpgradeGain, upgradePrice: coreUpgradeCost, buyFunction: () => { return ns.hacknet.upgradeCore(i, BUY_AMOUNT) }, upgradeType: "Core" }
+                bestDeal = { nodeIndex: i, gainPerDollar: coreUpgradeGain, upgradePrice: coreUpgradeCost, buyFunction: () => { return ns.hacknet.upgradeCore(i, BUY_AMOUNT) }, upgradeType: "Core" }
             }
+        }
 
-            if (canAfford(bestDeal.upgradePrice)) {
-                if (bestDeal.buyFunction()) {
-                    LOGGER.info(`Bought ${BUY_AMOUNT} Hacknet ${bestDeal.upgradeType} Upgrade(s)`)
-                }
+        if (canAfford(bestDeal.upgradePrice)) {
+            if (bestDeal.buyFunction()) {
+                LOGGER.info(`Bought ${BUY_AMOUNT} Hacknet ${bestDeal.upgradeType} Upgrade(s)`)
             }
         }
 
