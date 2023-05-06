@@ -52,19 +52,19 @@ export async function main(ns: NS): Promise<void> {
 
                 const levelUpgradeCost = ns.hacknet.getLevelUpgradeCost(i, BUY_AMOUNT)
                 const levelUpgradeGain = productionDifference(STATS, BUY_AMOUNT, 0, 0) / levelUpgradeCost
-                if (levelUpgradeGain > bestDeal.gainPerDollar && buyableInXSeconds(levelUpgradeCost) <= 60) {
+                if (levelUpgradeGain > bestDeal.gainPerDollar && buyableInXSeconds(levelUpgradeCost) <= 30) {
                     bestDeal = { nodeIndex: i, gainPerDollar: levelUpgradeGain, upgradePrice: levelUpgradeCost, buyFunction: () => { return ns.hacknet.upgradeLevel(i, BUY_AMOUNT) }, upgradeType: "Level Upgrade" }
                 }
 
                 const ramUpgradeCost = ns.hacknet.getRamUpgradeCost(i, BUY_AMOUNT)
                 const ramUpgradeGain = productionDifference(STATS, 0, BUY_AMOUNT, 0) / ramUpgradeCost
-                if (ramUpgradeGain > bestDeal.gainPerDollar && buyableInXSeconds(ramUpgradeCost) <= 120) {
+                if (ramUpgradeGain > bestDeal.gainPerDollar && buyableInXSeconds(ramUpgradeCost) <= 450) {
                     bestDeal = { nodeIndex: i, gainPerDollar: levelUpgradeGain, upgradePrice: ramUpgradeCost, buyFunction: () => { return ns.hacknet.upgradeRam(i, BUY_AMOUNT) }, upgradeType: "RAM Upgrade" }
                 }
 
                 const coreUpgradeCost = ns.hacknet.getCoreUpgradeCost(i, BUY_AMOUNT)
                 const coreUpgradeGain = productionDifference(STATS, 0, 0, BUY_AMOUNT) / coreUpgradeCost
-                if (coreUpgradeGain > bestDeal.gainPerDollar && buyableInXSeconds(coreUpgradeCost) <= 90) {
+                if (coreUpgradeGain > bestDeal.gainPerDollar && buyableInXSeconds(coreUpgradeCost) <= 300) {
                     bestDeal = { nodeIndex: i, gainPerDollar: coreUpgradeGain, upgradePrice: coreUpgradeCost, buyFunction: () => { return ns.hacknet.upgradeCore(i, BUY_AMOUNT) }, upgradeType: "Core Upgrade" }
                 }
             }
@@ -76,7 +76,7 @@ export async function main(ns: NS): Promise<void> {
             newNodePrice += ns.formulas.hacknetNodes.coreUpgradeCost(1, highestExistingStats.level - 1, HACKNET_LEVEL_COST_MULTIPLIER)
 
             const NEW_NODE_GAIN = highestExistingStats.production / newNodePrice
-            if (NEW_NODE_GAIN > bestDeal.gainPerDollar && buyableInXSeconds(newNodePrice) <= 180) {
+            if (NEW_NODE_GAIN > bestDeal.gainPerDollar && buyableInXSeconds(newNodePrice) <= 120) {
                 bestDeal = { nodeIndex: ns.hacknet.numNodes(), gainPerDollar: NEW_NODE_GAIN, upgradePrice: NODE_PURCHASE_COST, buyFunction: () => { return ns.hacknet.purchaseNode() >= 0 }, upgradeType: "Node" }
             }
 
