@@ -42,6 +42,17 @@ export const Hacknet = {
 
         // If all properties are the same, return 0
         return 0;
+    },
+
+    hacknetProduction(ns: NS): number {
+        let production = 0
+        for (let i = 0; i < ns.hacknet.numNodes(); i++) {
+            const STATS: NodeStats = ns.hacknet.getNodeStats(i)
+
+            production += STATS.production
+        }
+
+        return production
     }
 }
 
