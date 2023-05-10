@@ -26,7 +26,7 @@ export async function main(ns: NS): Promise<void> {
 
     function productionDifference(currentStats: NodeStats, levelUpgrades: number, ramUpgrades: number, coreUpgrades: number) {
         const currentProduction = ns.formulas.hacknetNodes.moneyGainRate(currentStats.level, currentStats.ram, currentStats.cores, HACKNET_PRODUCTION_MULTIPLIER)
-        const afterUpgradeProduction = ns.formulas.hacknetNodes.moneyGainRate(currentStats.level + levelUpgrades, Math.pow(currentStats.ram, ramUpgrades + 1), currentStats.cores + coreUpgrades, HACKNET_PRODUCTION_MULTIPLIER)
+        const afterUpgradeProduction = ns.formulas.hacknetNodes.moneyGainRate(currentStats.level + levelUpgrades, Math.pow(2, currentStats.ram + ramUpgrades), currentStats.cores + coreUpgrades, HACKNET_PRODUCTION_MULTIPLIER)
 
         return afterUpgradeProduction - currentProduction
     }
@@ -75,13 +75,15 @@ export async function main(ns: NS): Promise<void> {
                 }
             }
 
+            ns.print("New Node")
             const NODE_PURCHASE_COST = ns.hacknet.getPurchaseNodeCost()
-            let newNodePrice = NODE_PURCHASE_COST
-            newNodePrice += ns.formulas.hacknetNodes.coreUpgradeCost(1, highestExistingStats.cores - 1, HACKNET_CORE_COST_MULTIPLIER)
-            newNodePrice += ns.formulas.hacknetNodes.ramUpgradeCost(1, Math.sqrt(highestExistingStats.ram) - 1, HACKNET_RAM_COST_MULTIPLIER)
-            newNodePrice += ns.formulas.hacknetNodes.coreUpgradeCost(1, highestExistingStats.level - 1, HACKNET_LEVEL_COST_MULTIPLIER)
+            const newNodePrice = NODE_PURCHASE_COST
+            // newNodePrice += ns.formulas.hacknetNodes.coreUpgradeCost(1, highestExistingStats.cores - 1, HACKNET_CORE_COST_MULTIPLIER)
+            // newNodePrice += ns.formulas.hacknetNodes.ramUpgradeCost(1, Math.sqrt(highestExistingStats.ram) - 1, HACKNET_RAM_COST_MULTIPLIER)
+            // newNodePrice += ns.formulas.hacknetNodes.coreUpgradeCost(1, highestExistingStats.level - 1, HACKNET_LEVEL_COST_MULTIPLIER)
 
             const NEW_NODE_GAIN = highestExistingStats.production / newNodePrice
+            ns.print(newNodePrice, " ", NEW_NODE_GAIN)
             if (NEW_NODE_GAIN > bestDeal.gainPerDollar && buyableInXSeconds(newNodePrice) <= 120) {
                 bestDeal = { nodeIndex: ns.hacknet.numNodes(), gainPerDollar: NEW_NODE_GAIN, upgradePrice: NODE_PURCHASE_COST, buyFunction: () => { return ns.hacknet.purchaseNode() >= 0 }, upgradeType: "Node" }
             }
