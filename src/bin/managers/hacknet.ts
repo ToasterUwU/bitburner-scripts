@@ -26,7 +26,7 @@ export async function main(ns: NS): Promise<void> {
 
     function productionDifference(currentStats: NodeStats, levelUpgrades: number, ramUpgrades: number, coreUpgrades: number) {
         const currentProduction = ns.formulas.hacknetNodes.moneyGainRate(currentStats.level, currentStats.ram, currentStats.cores, HACKNET_PRODUCTION_MULTIPLIER)
-        const afterUpgradeProduction = ns.formulas.hacknetNodes.moneyGainRate(currentStats.level + levelUpgrades, Math.pow(2, currentStats.ram + ramUpgrades), currentStats.cores + coreUpgrades, HACKNET_PRODUCTION_MULTIPLIER)
+        const afterUpgradeProduction = ns.formulas.hacknetNodes.moneyGainRate(currentStats.level + levelUpgrades, Math.pow(2, currentStats.ram + ramUpgrades - 1), currentStats.cores + coreUpgrades, HACKNET_PRODUCTION_MULTIPLIER)
 
         return afterUpgradeProduction - currentProduction
     }
