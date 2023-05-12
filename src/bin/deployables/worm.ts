@@ -23,11 +23,6 @@ export async function main(ns: NS): Promise<void> {
     const MAX_RAM = ns.getServerMaxRam(HOSTNAME)
 
     while (true) {
-        const currentRam = ns.getServerMaxRam(HOSTNAME)
-        if (currentRam > MAX_RAM) {
-            ns.spawn("/bin/deployables/worm.js", Math.floor(ns.getServerMaxRam(HOSTNAME) / ns.getScriptRam("/bin/deployables/worm.js")))
-        }
-
         const COMPUTER_MAP: RecursiveDictionary = Navigation.recursiveScan(ns, "home", true)
 
         const flattenedComputerMap = flattenRecursiveDict(COMPUTER_MAP)
@@ -36,6 +31,11 @@ export async function main(ns: NS): Promise<void> {
             .map(({ value }) => value) // shuffle the list
 
         for (const i in flattenedComputerMap) {
+            const currentRam = ns.getServerMaxRam(HOSTNAME)
+            if (currentRam > MAX_RAM) {
+                ns.spawn("/bin/deployables/worm.js", Math.floor(ns.getServerMaxRam(HOSTNAME) / ns.getScriptRam("/bin/deployables/worm.js")))
+            }
+
             const host = flattenedComputerMap[i]
 
             if (ns.hasRootAccess(host) && ns.getServerRequiredHackingLevel(host) <= ns.getPlayer().skills.hacking) {
