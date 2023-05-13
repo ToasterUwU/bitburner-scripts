@@ -1,7 +1,8 @@
 import { NS } from '@ns'
-import { TermLogger, Navigation, RecursiveDictionary } from '/lib/helpers'
+import { TermLogger } from '/lib/helpers'
+import { Navigation, RecursiveDictionary } from '/lib/navigation'
 
-// Its a worm, it nibbbles. From that multi million transaction, to that guy who pays $10 for gas
+// Its a worm, it nibbles. From that multi million transaction, to that guy who pays $10 for gas
 
 function flattenRecursiveDict(data: RecursiveDictionary) {
     const flattenedData: Array<string> = []

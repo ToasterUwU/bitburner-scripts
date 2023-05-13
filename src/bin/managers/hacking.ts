@@ -1,5 +1,6 @@
 import { NS } from "@ns"
-import { TermLogger, Navigation, RecursiveDictionary } from "/lib/helpers"
+import { TermLogger } from "/lib/helpers"
+import { Navigation, RecursiveDictionary } from '/lib/navigation'
 
 
 // returns true if rooted, false if not
@@ -29,7 +30,7 @@ async function rootIfPossible(ns: NS, host: string) {
 }
 
 function deployWorm(ns: NS, logger: TermLogger, host: string) {
-    ns.scp(["/bin/deployables/worm.js", "/lib/helpers.js"], host)
+    ns.scp(["/bin/deployables/worm.js", "/lib/helpers.js", "/lib/navigation.js"], host)
 
     const threads = Math.floor((ns.getServerMaxRam(host) - ns.getServerUsedRam(host)) / ns.getScriptRam("/bin/deployables/worm.js", host))
 

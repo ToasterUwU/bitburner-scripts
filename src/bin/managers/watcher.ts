@@ -3,7 +3,6 @@ import { TermLogger } from '/lib/helpers'
 
 
 export async function main(ns: NS): Promise<void> {
-
     const LOGGER = new TermLogger(ns)
     LOGGER.success("Started Watcher")
 

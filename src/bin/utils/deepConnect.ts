@@ -1,5 +1,5 @@
 import { NS } from '@ns'
-import { Navigation, RecursiveDictionary } from '/lib/helpers'
+import { Navigation, RecursiveDictionary } from '/lib/navigation'
 
 
 function findPath(ns: NS, target: string, computerMap: RecursiveDictionary, hostList: Array<string> = [], isFound = false): [Array<string>, boolean] {

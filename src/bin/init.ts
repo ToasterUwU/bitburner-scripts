@@ -1,6 +1,7 @@
 import { NS } from "@ns"
 import { TermLogger } from "/lib/helpers"
 
+
 const MANAGER_PRIOS: Record<string, number> = { "/bin/managers/hacknet.js": 0, "/bin/managers/watcher.js": 1, "/bin/managers/hacking.js": 2, "/bin/deployables/worm.js": Infinity }
 
 function compareScriptPrios(manager1: string, manager2: string) {

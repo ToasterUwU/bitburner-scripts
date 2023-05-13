@@ -1,5 +1,5 @@
 import { NS } from "@ns";
-import { Navigation, RecursiveDictionary } from "/lib/helpers";
+import { Navigation, RecursiveDictionary } from "/lib/navigation";
 
 
 const GREEN = "\u001b[32m";

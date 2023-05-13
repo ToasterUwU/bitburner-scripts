@@ -1,5 +1,7 @@
 import { NS, NodeStats } from "@ns";
-import { TermLogger, Hacknet } from "/lib/helpers";
+import { TermLogger } from "/lib/helpers";
+import { Hacknet } from "/lib/hacknet";
+
 
 interface Deal {
     nodeIndex: number
