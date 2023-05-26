@@ -34,7 +34,7 @@ export async function main(ns: NS): Promise<void> {
         for (const i in flattenedComputerMap) {
             const currentRam = ns.getServerMaxRam(HOSTNAME)
             if (currentRam > MAX_RAM) {
-                ns.spawn("/bin/deployables/worm.js", Math.floor(ns.getServerMaxRam(HOSTNAME) / ns.getScriptRam("/bin/deployables/worm.js")))
+                ns.spawn("bin/deployables/worm.js", Math.floor(ns.getServerMaxRam(HOSTNAME) / ns.getScriptRam("bin/deployables/worm.js")))
             }
 
             const host = flattenedComputerMap[i]

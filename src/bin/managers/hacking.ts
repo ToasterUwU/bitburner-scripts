@@ -30,12 +30,12 @@ async function rootIfPossible(ns: NS, host: string) {
 }
 
 function deployWorm(ns: NS, logger: TermLogger, host: string) {
-    ns.scp(["/bin/deployables/worm.js", "/lib/helpers.js", "/lib/navigation.js"], host)
+    ns.scp(["bin/deployables/worm.js", "/lib/helpers.js", "/lib/navigation.js"], host)
 
-    const threads = Math.floor((ns.getServerMaxRam(host) - ns.getServerUsedRam(host)) / ns.getScriptRam("/bin/deployables/worm.js", host))
+    const threads = Math.floor((ns.getServerMaxRam(host) - ns.getServerUsedRam(host)) / ns.getScriptRam("bin/deployables/worm.js", host))
 
     if (threads > 0) {
-        if (ns.exec("/bin/deployables/worm.js", host, threads) > 0) {
+        if (ns.exec("bin/deployables/worm.js", host, threads) > 0) {
             logger.successToast("Started worm.js on", host)
         }
     }
@@ -48,7 +48,7 @@ async function recursiveRoot(ns: NS, logger: TermLogger, computerMap: RecursiveD
                 logger.successToast("Rooted", host)
                 deployWorm(ns, logger, host)
             }
-        } else if (ns.hasRootAccess(host) && !ns.scriptRunning("/bin/deployables/worm.js", host)) {
+        } else if (ns.hasRootAccess(host) && !ns.scriptRunning("bin/deployables/worm.js", host)) {
             deployWorm(ns, logger, host)
         }
 
