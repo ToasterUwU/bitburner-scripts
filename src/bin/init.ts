@@ -21,7 +21,6 @@ function compareScriptPrios(manager1: string, manager2: string) {
 export async function main(ns: NS): Promise<void> {
     const LOGGER = new TermLogger(ns)
 
-    ns.tprint(ns.ls("home", "bin/"))
     for (const script of ns.ls("home", "bin").sort(compareScriptPrios).reverse()) {
         let found = false
         for (const key in MANAGER_PRIOS) {
