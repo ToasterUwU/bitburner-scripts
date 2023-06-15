@@ -22,7 +22,7 @@ function getUsableThreads(ns: NS, HOSTNAME: string, CURRENT_PROCESS: RunningScri
 }
 
 export async function main(ns: NS): Promise<void> {
-    if (ns.fileExists("rebooting_worm.txt", host)) {
+    if (ns.fileExists("rebooting_worm.txt")) {
         ns.rm("rebooting_worm.txt")
     }
 
