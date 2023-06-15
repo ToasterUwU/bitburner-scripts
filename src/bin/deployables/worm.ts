@@ -18,7 +18,7 @@ function flattenRecursiveDict(data: RecursiveDictionary) {
 }
 
 function getUsableThreads(ns: NS, HOSTNAME: string, CURRENT_PROCESS: RunningScript) {
-    return Math.floor((ns.getServerMaxRam(HOSTNAME) - (ns.getServerUsedRam(HOSTNAME) - (CURRENT_PROCESS.threads + CURRENT_PROCESS.ramUsage))) / ns.getScriptRam("bin/deployables/worm.js"))
+    return Math.floor((ns.getServerMaxRam(HOSTNAME) - (ns.getServerUsedRam(HOSTNAME) - (CURRENT_PROCESS.threads * CURRENT_PROCESS.ramUsage))) / ns.getScriptRam("bin/deployables/worm.js"))
 }
 
 export async function main(ns: NS): Promise<void> {
