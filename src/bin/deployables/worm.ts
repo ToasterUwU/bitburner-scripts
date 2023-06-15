@@ -1,4 +1,4 @@
-import { NS } from '@ns'
+import { NS, RunningScript } from '@ns'
 import { TermLogger } from '/lib/helpers'
 import { Navigation, RecursiveDictionary } from '/lib/navigation'
 
@@ -17,11 +17,13 @@ function flattenRecursiveDict(data: RecursiveDictionary) {
     return flattenedData
 }
 
+function getUsableThreads(ns: NS, HOSTNAME: string, CURRENT_PROCESS: RunningScript) {
+    return Math.floor((ns.getServerMaxRam(HOSTNAME) - (ns.getServerUsedRam(HOSTNAME) - (CURRENT_PROCESS.threads + CURRENT_PROCESS.ramUsage))) / ns.getScriptRam("bin/deployables/worm.js"))
+}
+
 export async function main(ns: NS): Promise<void> {
     const LOGGER = new TermLogger(ns)
     const HOSTNAME = ns.getHostname()
-
-    const MAX_RAM = ns.getServerMaxRam(HOSTNAME)
 
     while (true) {
         const COMPUTER_MAP: RecursiveDictionary = Navigation.recursiveScan(ns, "home", true)
@@ -32,11 +34,11 @@ export async function main(ns: NS): Promise<void> {
             .map(({ value }) => value) // shuffle the list
 
         for (const i in flattenedComputerMap) {
-            const CURRENT_RAM = ns.getServerMaxRam(HOSTNAME)
-            if (CURRENT_RAM > MAX_RAM) {
-                const CURRENT_PROCESS = ns.getRunningScript()
-                if (CURRENT_PROCESS) {
-                    ns.spawn("bin/deployables/worm.js", Math.floor((ns.getServerMaxRam(HOSTNAME) - (ns.getServerUsedRam(HOSTNAME) - (CURRENT_PROCESS.threads + CURRENT_PROCESS.ramUsage))) / ns.getScriptRam("bin/deployables/worm.js")))
+            const CURRENT_PROCESS = ns.getRunningScript()
+            if (CURRENT_PROCESS) {
+                const USABLE_THREADS = getUsableThreads(ns, HOSTNAME, CURRENT_PROCESS)
+                if (CURRENT_PROCESS.threads < USABLE_THREADS) {
+                    ns.spawn("bin/deployables/worm.js", USABLE_THREADS)
                 }
             }
 
