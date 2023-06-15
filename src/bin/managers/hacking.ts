@@ -30,6 +30,10 @@ async function rootIfPossible(ns: NS, host: string) {
 }
 
 function deployWorm(ns: NS, logger: TermLogger, host: string) {
+    if (ns.fileExists("rebooting_worm.txt", host)) {
+        return
+    }
+
     ns.scp(["bin/deployables/worm.js", "/lib/helpers.js", "/lib/navigation.js"], host)
 
     const threads = Math.floor((ns.getServerMaxRam(host) - ns.getServerUsedRam(host)) / ns.getScriptRam("bin/deployables/worm.js", host))

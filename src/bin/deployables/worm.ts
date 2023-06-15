@@ -22,6 +22,10 @@ function getUsableThreads(ns: NS, HOSTNAME: string, CURRENT_PROCESS: RunningScri
 }
 
 export async function main(ns: NS): Promise<void> {
+    if (ns.fileExists("rebooting_worm.txt", host)) {
+        ns.rm("rebooting_worm.txt")
+    }
+
     const LOGGER = new TermLogger(ns)
     const HOSTNAME = ns.getHostname()
 
@@ -38,6 +42,7 @@ export async function main(ns: NS): Promise<void> {
             if (CURRENT_PROCESS) {
                 const USABLE_THREADS = getUsableThreads(ns, HOSTNAME, CURRENT_PROCESS)
                 if (CURRENT_PROCESS.threads < USABLE_THREADS) {
+                    ns.write("rebooting_worm.txt", "Hello Mom", "w")
                     ns.spawn("bin/deployables/worm.js", USABLE_THREADS)
                 }
             }
