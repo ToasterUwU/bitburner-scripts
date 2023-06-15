@@ -73,10 +73,27 @@ export async function main(ns: NS): Promise<void> {
         //     // couldnt buy Crackers, dont care.. maybe next time
         // }
 
+        for (let i = 0; i < ns.getPurchasedServerLimit(); i++) {
+            if (ns.getPlayer().money > ns.getPurchasedServerCost(2)) {
+                const NAME = ns.purchaseServer("PS", 2)
+                if (NAME) {
+                    LOGGER.successToast("Bought new Server: ", NAME)
+                }
+            }
+        }
+
+        for (const name of ns.getPurchasedServers()) {
+            const NEW_RAM = Math.pow(2, (Math.log(ns.getServerMaxRam(name)) / Math.log(2)) + 1)
+            if (ns.getPlayer().money > (ns.getPurchasedServerUpgradeCost(name, NEW_RAM) * 3)) {
+                if (ns.upgradePurchasedServer(name, NEW_RAM)) {
+                    LOGGER.infoToast("Upgraded Server: ", name)
+                }
+            }
+        }
+        await ns.sleep(5000)
+
         const COMPUTER_MAP: RecursiveDictionary = Navigation.recursiveScan(ns, "home", true)
-
         await recursiveRoot(ns, LOGGER, COMPUTER_MAP)
-
         await ns.sleep(5000)
     }
 }
