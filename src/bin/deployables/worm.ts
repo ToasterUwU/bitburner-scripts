@@ -32,9 +32,12 @@ export async function main(ns: NS): Promise<void> {
             .map(({ value }) => value) // shuffle the list
 
         for (const i in flattenedComputerMap) {
-            const currentRam = ns.getServerMaxRam(HOSTNAME)
-            if (currentRam > MAX_RAM) {
-                ns.spawn("bin/deployables/worm.js", Math.floor(ns.getServerMaxRam(HOSTNAME) / ns.getScriptRam("bin/deployables/worm.js")))
+            const CURRENT_RAM = ns.getServerMaxRam(HOSTNAME)
+            if (CURRENT_RAM > MAX_RAM) {
+                const CURRENT_PROCESS = ns.getRunningScript()
+                if (CURRENT_PROCESS) {
+                    ns.spawn("bin/deployables/worm.js", Math.floor((ns.getServerMaxRam(HOSTNAME) - (ns.getServerUsedRam(HOSTNAME) - (CURRENT_PROCESS.threads + CURRENT_PROCESS.ramUsage))) / ns.getScriptRam("bin/deployables/worm.js")))
+                }
             }
 
             const host = flattenedComputerMap[i]
