@@ -79,7 +79,7 @@ export async function main(ns: NS): Promise<void> {
 
         for (let i = 0; i < ns.getPurchasedServerLimit(); i++) {
             if (ns.getPlayer().money > ns.getPurchasedServerCost(2)) {
-                const NAME = ns.purchaseServer("PS", 2)
+                const NAME = ns.purchaseServer("PS", 8)
                 if (NAME) {
                     LOGGER.successToast("Bought new Server: ", NAME)
                 }
