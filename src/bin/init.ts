@@ -35,7 +35,7 @@ export async function main(ns: NS): Promise<void> {
         }
 
         while (ns.getScriptRam(script) > ns.getServerMaxRam("home") - ns.getServerUsedRam("home")) { // while not enough free RAM currently
-            // ns.singularity.upgradeHomeRam()
+            ns.singularity.upgradeHomeRam()
             await ns.sleep(500)
         }
 

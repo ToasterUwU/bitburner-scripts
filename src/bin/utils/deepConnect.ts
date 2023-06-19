@@ -29,5 +29,7 @@ export async function main(ns: NS): Promise<void> {
 
     const RESULT = findPath(ns, TO_FIND, Navigation.recursiveScan(ns, "home", true))
 
-    ns.tprint("connect ", RESULT[0].join(";connect "))
+    for (const host of RESULT[0]) {
+        ns.singularity.connect(host)
+    }
 }
