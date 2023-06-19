@@ -22,6 +22,10 @@ export async function main(ns: NS): Promise<void> {
     const LOGGER = new TermLogger(ns)
 
     for (const script of ns.ls("home", "bin").sort(compareScriptPrios).reverse()) {
+        if (ns.scriptRunning(script, "home")) {
+            continue
+        }
+
         let found = false
         for (const key in MANAGER_PRIOS) {
             if (key == script) {
