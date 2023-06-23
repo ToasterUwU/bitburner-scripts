@@ -10,8 +10,9 @@ async function rootIfPossible(ns: NS, host: string) {
     for (const cracker of crackers) {
         try {
             cracker(host)
-            // eslint-disable-next-line no-empty
-        } catch (error) { }
+        } catch (error) {
+            // ignore cracker issues
+        }
     }
 
     try {
@@ -23,7 +24,7 @@ async function rootIfPossible(ns: NS, host: string) {
     try {
         await ns.singularity.installBackdoor()
     } catch (error) {
-        // ignore missing source file or missing RAM
+        //ignore missing source file or missing RAM
     }
 
     return true
@@ -45,8 +46,10 @@ function deployWorm(ns: NS, logger: TermLogger, host: string) {
     }
 }
 
-async function recursiveRoot(ns: NS, logger: TermLogger, computerMap: RecursiveDictionary) {
+async function recursiveRoot(ns: NS, logger: TermLogger, computerMap: RecursiveDictionary, startHost: string) {
     for (const host in computerMap) {
+        ns.singularity.connect(host)
+
         if (!ns.hasRootAccess(host) && ns.getServerRequiredHackingLevel(host) <= ns.getPlayer().skills.hacking) {
             if (await rootIfPossible(ns, host)) {
                 logger.successToast("Rooted", host)
@@ -56,7 +59,9 @@ async function recursiveRoot(ns: NS, logger: TermLogger, computerMap: RecursiveD
             deployWorm(ns, logger, host)
         }
 
-        await recursiveRoot(ns, logger, computerMap[host])
+        await recursiveRoot(ns, logger, computerMap[host], host)
+
+        ns.singularity.connect(startHost)
     }
 }
 
@@ -97,7 +102,7 @@ export async function main(ns: NS): Promise<void> {
         await ns.sleep(5000)
 
         const COMPUTER_MAP: RecursiveDictionary = Navigation.recursiveScan(ns, "home", true)
-        await recursiveRoot(ns, LOGGER, COMPUTER_MAP)
+        await recursiveRoot(ns, LOGGER, COMPUTER_MAP, "home")
         await ns.sleep(5000)
     }
 }
