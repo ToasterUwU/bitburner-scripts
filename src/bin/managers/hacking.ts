@@ -91,6 +91,18 @@ export async function main(ns: NS): Promise<void> {
             }
         }
 
+        if (ns.getPlayer().money > (ns.singularity.getUpgradeHomeRamCost() * 3)) {
+            if (ns.singularity.upgradeHomeRam()) {
+                LOGGER.infoToast("Upgraded Home Server RAM")
+            }
+        }
+
+        if (ns.getPlayer().money > (ns.singularity.getUpgradeHomeCoresCost() * 3)) {
+            if (ns.singularity.upgradeHomeCores()) {
+                LOGGER.infoToast("Upgraded Home Server Cores")
+            }
+        }
+
         for (const name of ns.getPurchasedServers()) {
             const NEW_RAM = Math.pow(2, (Math.log(ns.getServerMaxRam(name)) / Math.log(2)) + 1)
             if (ns.getPlayer().money > (ns.getPurchasedServerUpgradeCost(name, NEW_RAM) * 3)) {
