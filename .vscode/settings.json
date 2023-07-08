@@ -17,7 +17,7 @@
     "typescript.preferences.importModuleSpecifier": "non-relative",
     // Bitburner Extension Settings
     "bitburner.scriptRoot": "./dist/",
-    "bitburner.authToken": "1FkpDJ5rC93JpqtuPULGVuGRaNLMi1gXiVG+Y+JbVUKrobse5Kb0US8iTh4zjo9j", // This isnt sensitive, since it only affects anything if you have my save file as well, and even than all you can do is connect to the API on that save on your own PC
+    "bitburner.authToken": "wYg6WZ4NItUpwyoc0FCjWuyyski1z3u7ZRvFo4JTiGzv/JaDvFZxZAFzjmkBfI+l", // This isnt sensitive, since it only affects anything if you have my save file as well, and even than all you can do is connect to the API on that save on your own PC
     "bitburner.fileWatcher.enable": true,
     "bitburner.showFileWatcherEnabledNotification": true,
     "bitburner.showPushSuccessNotification": true,
